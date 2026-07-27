@@ -1,5 +1,5 @@
 import React from 'react';
-import { Smartphone, Download, Share, PlusSquare, X, CheckCircle2 } from 'lucide-react';
+import { Smartphone, Download, Share, PlusSquare, X, CheckCircle2, MoreVertical, ExternalLink, Sparkles } from 'lucide-react';
 
 interface InstallPwaModalProps {
   isOpen: boolean;
@@ -15,6 +15,12 @@ export const InstallPwaModal: React.FC<InstallPwaModalProps> = ({
   isIOS,
 }) => {
   if (!isOpen) return null;
+
+  const isInIframe = typeof window !== 'undefined' && window.self !== window.top;
+
+  const handleOpenNewTab = () => {
+    window.open(window.location.href, '_blank');
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200">
@@ -56,8 +62,8 @@ export const InstallPwaModal: React.FC<InstallPwaModalProps> = ({
               <p>Confirme clicando em <strong>Adicionar</strong> no canto superior.</p>
             </div>
           </div>
-        ) : (
-          /* Android / Desktop Install Action */
+        ) : onInstallNative ? (
+          /* Direct Android / Chrome Install Button (when prompt is available) */
           <div className="w-full flex flex-col gap-3">
             <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-3 text-left flex flex-col gap-1.5 text-xs text-slate-300">
               <div className="flex items-center gap-2 text-emerald-400 font-semibold">
@@ -68,15 +74,48 @@ export const InstallPwaModal: React.FC<InstallPwaModalProps> = ({
               </div>
             </div>
 
-            {onInstallNative && (
-              <button
-                onClick={onInstallNative}
-                className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl shadow-lg shadow-blue-500/25 transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Download className="w-4 h-4" />
-                <span>Instalar Agora</span>
-              </button>
-            )}
+            <button
+              onClick={onInstallNative}
+              className="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-black rounded-2xl shadow-lg shadow-emerald-500/25 transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer text-sm"
+            >
+              <Download className="w-5 h-5 animate-bounce" />
+              <span>Instalar Agora no Celular</span>
+            </button>
+          </div>
+        ) : isInIframe ? (
+          /* When inside AI Studio iframe */
+          <div className="w-full flex flex-col gap-3">
+            <div className="w-full bg-blue-950/40 border border-blue-500/30 rounded-2xl p-3.5 text-left flex flex-col gap-2 text-xs text-slate-200">
+              <div className="flex items-start gap-2 text-amber-400 font-bold text-xs">
+                <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>Como instalar no seu celular:</span>
+              </div>
+              <p className="text-slate-300 text-[11px] leading-relaxed">
+                O navegador não permite a instalação direta dentro da janela do chat. Clique no botão abaixo para <strong>abrir em nova aba</strong>.
+              </p>
+            </div>
+
+            <button
+              onClick={handleOpenNewTab}
+              className="w-full py-3.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-2xl shadow-lg shadow-blue-500/25 transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer text-xs"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span>1º Passo: Abrir em Nova Aba</span>
+            </button>
+          </div>
+        ) : (
+          /* Manual Android / Chrome Instructions (When in direct tab, if prompt didn't auto-trigger) */
+          <div className="w-full flex flex-col gap-3">
+            <div className="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-3.5 text-left flex flex-col gap-2.5 text-xs text-slate-300">
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 font-bold flex items-center justify-center text-[11px] shrink-0">1</span>
+                <p>Toque no menu <MoreVertical className="w-3.5 h-3.5 inline text-blue-400" /> (três pontos no topo do Chrome).</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 font-bold flex items-center justify-center text-xs shrink-0">2</span>
+                <p>Selecione <strong>"Instalar aplicativo"</strong> ou <strong>"Adicionar à tela inicial"</strong>.</p>
+              </div>
+            </div>
           </div>
         )}
 
