@@ -27,6 +27,7 @@ import { StatsModal } from './components/StatsModal';
 import { HistoryModal } from './components/HistoryModal';
 import { AchievementsModal } from './components/AchievementsModal';
 import { HomeScreen } from './components/HomeScreen';
+import { InstallPwaModal } from './components/InstallPwaModal';
 import { Info, Sparkles } from 'lucide-react';
 
 const INITIAL_ACHIEVEMENTS: Achievement[] = [
@@ -66,6 +67,36 @@ export default function App() {
   const [isHistoryOpen, setIsHistoryOpen] = useState<boolean>(false);
   const [isAchievementsOpen, setIsAchievementsOpen] = useState<boolean>(false);
   const [isVictoryOpen, setIsVictoryOpen] = useState<boolean>(false);
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState<boolean>(false);
+
+  // PWA Install Prompt state
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const isIOS = typeof window !== 'undefined' && /iPhone|iPad|iPod/.test(navigator.userAgent);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallNativePwa = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult: { outcome: string }) => {
+        if (choiceResult.outcome === 'accepted') {
+          setDeferredPrompt(null);
+          setIsInstallModalOpen(false);
+          showToast('Quadra 64 instalado com sucesso!');
+        }
+      });
+    }
+  };
 
   const [hintsUsed, setHintsUsed] = useState<number>(0);
   const [hintPiece, setHintPiece] = useState<{
@@ -532,6 +563,7 @@ export default function App() {
           onToggleMute={() => setIsMuted(soundManager.toggleMute())}
           unlockedAchievementsCount={unlockedCount}
           totalAchievementsCount={achievements.length}
+          onInstallPwa={() => setIsInstallModalOpen(true)}
         />
       ) : (
         <div className="h-full h-[100dvh] max-h-[100dvh] w-full max-w-7xl mx-auto flex flex-col justify-between overflow-hidden p-1.5 sm:p-3">
@@ -623,6 +655,12 @@ export default function App() {
         mode={gameMode}
         onNewGame={() => initNewGame()}
         onClose={() => setIsVictoryOpen(false)}
+      />
+      <InstallPwaModal
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
+        onInstallNative={deferredPrompt ? handleInstallNativePwa : undefined}
+        isIOS={isIOS}
       />
     </div>
   );

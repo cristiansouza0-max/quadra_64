@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Play, Trophy, History, BarChart3, HelpCircle, Sparkles, Flame, Shield, Volume2, VolumeX, Smartphone, Zap } from 'lucide-react';
+import { Play, Trophy, History, BarChart3, HelpCircle, Sparkles, Flame, Shield, Volume2, VolumeX, Smartphone, Zap, Download } from 'lucide-react';
 import { GameStats, GameMode } from '../types';
 
 interface HomeScreenProps {
@@ -14,6 +14,7 @@ interface HomeScreenProps {
   onToggleMute: () => void;
   unlockedAchievementsCount: number;
   totalAchievementsCount: number;
+  onInstallPwa?: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -27,6 +28,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onToggleMute,
   unlockedAchievementsCount,
   totalAchievementsCount,
+  onInstallPwa,
 }) => {
   // Level & XP Calculation
   const currentXP = stats.xp ?? 0;
@@ -51,8 +53,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <div className="absolute top-5 left-1/2 -translate-x-1/2 w-72 h-72 bg-blue-600/15 rounded-full blur-3xl pointer-events-none animate-pulse" />
       <div className="absolute bottom-10 left-5 w-56 h-56 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Top Header Controls (Mute button on right) */}
-      <div className="flex items-center justify-end z-10 shrink-0">
+      {/* Top Header Controls (Install PWA + Mute button) */}
+      <div className="flex items-center justify-between z-10 shrink-0">
+        {onInstallPwa ? (
+          <button
+            onClick={onInstallPwa}
+            className="py-1.5 px-3 bg-gradient-to-r from-blue-600/30 to-indigo-600/30 hover:from-blue-600/40 hover:to-indigo-600/40 border border-blue-500/40 rounded-full text-blue-300 hover:text-white transition-all cursor-pointer text-xs font-bold flex items-center gap-1.5 shadow-xs active:scale-95"
+          >
+            <Download className="w-3.5 h-3.5 text-blue-400 animate-bounce" />
+            <span>Instalar App</span>
+          </button>
+        ) : <div />}
+
         <button
           onClick={onToggleMute}
           className="p-2 bg-slate-900/90 border border-slate-800 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition-all cursor-pointer shadow-xs"
@@ -61,6 +73,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           {isMuted ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
         </button>
       </div>
+
 
       {/* Main Center Content Container */}
       <div className="flex-1 flex flex-col justify-center my-auto py-2 z-10 min-h-0 w-full max-w-2xl mx-auto gap-4">
