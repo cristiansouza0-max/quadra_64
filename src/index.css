@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap');
+
+html, body, #root {
+  height: 100%;
+  max-height: 100dvh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+@layer base {
+  body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #0f172a;
+    color: #f8fafc;
+  }
+  
+  h1, h2, .font-display {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+}
+
+.board-container {
+  background-color: #1e293b;
+  border: 4px solid #334155;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+}
+
+.cell-empty {
+  background-color: #334155;
+}
+
+.piece-shadow {
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+}
+

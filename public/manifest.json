@@ -1,0 +1,17 @@
+{
+  "short_name": "Quadra 64",
+  "name": "Quadra 64: Mestre dos Blocos",
+  "description": "Desafio de raciocínio espacial e encaixe de peças em um tabuleiro 8x8.",
+  "start_url": "/",
+  "background_color": "#020617",
+  "theme_color": "#0f172a",
+  "display": "standalone",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

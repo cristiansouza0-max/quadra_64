@@ -1,0 +1,6 @@
+{
+  "name": "Quadra 64: Mestre dos Blocos",
+  "description": "Jogo de tabuleiro mobile 8x8 com 64 espaços onde você deve posicionar as peças coloridas em um desafio de raciocínio espacial com peças pretas fixas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
